@@ -209,11 +209,14 @@ function oneShot(ph, p5idx) {
 
 // sample: 争先恐后, 0000
 function Game(ph, p5idx) {
-   this.ph = oneShot(ph, p5idx);
-   this.stat = { ph: this.getOneStat(this.ph) };
-   this.history = [];
+   this.reset(ph, p5idx);
 }
 Game.prototype = {
+   reset: function(ph, p5idx) {
+      this.ph = oneShot(ph, p5idx);
+      this.stat = { ph: this.getOneStat(this.ph) };
+      this.history = [];
+   },
    getOneStat: function (guess) {
       const r = { a: {}, b: {}, p5: {}, zi: {} };
       guess.forEach(function (z, i) {
@@ -396,6 +399,7 @@ function GHint(game) {
    this.env = env;
    this.dom = u.c('div');
    const view = u.c('div');
+   view.style.display = 'none';
    this.view = view;
    u.a(this.dom, view);
 
@@ -410,9 +414,11 @@ function GHint(game) {
       if (env.show) {
          u.a(btn, u.t('^'));
          view.innerHTML = '';
+         view.style.display = 'none';
          env.show = false;
       } else {
          u.a(btn, u.t('v'));
+         view.style.display = 'block';
          env.show = true;
          that.update();
       }
@@ -478,8 +484,13 @@ GHint.prototype = {
 };
 
 function init() {
+   const dayts = 1000 * 24 * 3600;
+   const cnpn = window.CNPhrase.length;
+   const ts = new Date();
+   const cnp = window.CNPhrase[Math.floor(ts.getTime() / dayts) % cnpn];
+
    const layout = new GLayout();
-   const game = new Game('争先恐后', 0);
+   const game = new Game(cnp.a, cnp.p || 0);
    const phdiv = u.c('div');
    u.ca(phdiv, 'phview');
    u.a(layout.dom, phdiv);
