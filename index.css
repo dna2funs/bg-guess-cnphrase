@@ -1,0 +1,81 @@
+body {
+   overflow: hidden;
+   margin: 0;
+   padding: 0;
+   width: 100vw;
+   height: 100vh;
+   display: flex;
+}
+
+.layout {
+   width: 100%;
+   height: 100%;
+   max-width: 320px;
+   max-height: 480px;
+   margin: auto;
+   overflow-y: auto;
+   border: 3px solid #fcfcfc;
+   display: flex;
+   flex-direction: column;
+}
+
+.chcontainer {
+   display: flex;
+   justify-content: space-between;
+   width: 100%;
+}
+.character {
+   display: inline-block;
+   text-align: center;
+   user-select: none;
+   flex: 1 0 auto;
+   max-width: 25%;
+   overflow: hidden;
+   white-space: nowrap;
+}
+.character .pinyin { position: relative; }
+.character .pinyin > div { display: inline-block; }
+.character .pinyin > div.static { z-index: 1; }
+.character .pinyin > div.overlap { position: absolute; top: 0; z-index: 0; white-space: nowrap; overflow: hidden; }
+.character .pinyin > div.bottom { z-index: -1; }
+.character .pinyin > .p5 { height: 8px; margin-top: -1px; font-weight: bold; }
+.character .pinyin > .full { color: orange; }
+.character .pinyin > .half { color: blue }
+.character .hanzi { font-size: 36px; }
+.character .hanzi.full { color: orange; }
+.character .hanzi.half { color: blue }
+
+.phview {
+   flex: 1 0 auto;
+   height: 0px;
+   overflow-x: hidden;
+   overflow-y: auto;
+}
+
+.input-container {
+   display: flex;
+}
+.input-container > input {
+   flex: 1 0 auto;
+   width: 0px;
+}
+
+.spcontainer {
+   width: 100vw;
+   height: 100vh;
+   opacity: 0.8;
+   top: 0;
+   left: 0;
+   position: fixed;
+   background-color: white;
+   display: flex;
+}
+.spview {
+   margin: auto;
+   opacity: 1;
+   background-color: white;
+}
+.spzi {
+   font-size: 36px;
+   user-select: none;
+}
