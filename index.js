@@ -176,7 +176,8 @@ GCharacter.prototype = {
       if (pinyin === '?') {
          if (this.ch) u.a(pdiv, u.t(pinyin));
       } else {
-         pxdiv = u.c('div'); u.a(pxdiv, u.t(pinyin[0])); u.ca(pxdiv, flagcolors[pick(this.f, 3)]); u.a(pdiv, pxdiv);
+         pxdiv = u.c('div'); if (pinyin[0]) u.a(pxdiv, u.t(pinyin[0])); else pxdiv.innerHTML = '&nbsp;';
+         u.ca(pxdiv, flagcolors[pick(this.f, 3)]); u.a(pdiv, pxdiv);
          const xp5 = pick(this.f, 1);
          const xb = pick(this.f, 2);
          if (xp5 === xb) {
@@ -274,6 +275,7 @@ function selectPinyin(zi, env, i, ginput) {
       u.a(opt, u.t(z));
       u.a(psel, opt);
    });
+   psel.value = '' + idx;
    u.a(sdiv, psel);
    const zidiv = u.c('div');
    u.ca(zidiv, 'spzi');
@@ -304,7 +306,7 @@ function selectPinyin(zi, env, i, ginput) {
    }
 }
 
-function GInput(game, opt) {
+function GInput(game, hint, opt) {
    opt = opt || {};
    this.game = game;
    this.dom = u.c('div');
@@ -354,6 +356,7 @@ function GInput(game, opt) {
          that.env.v = '';
          that.preview();
          that.input.focus();
+         hint.update();
       }
    });
 
@@ -387,8 +390,92 @@ GInput.prototype = {
 
 function GHint(game) {
    this.game = game;
+   const env = {
+      show: false
+   };
+   this.env = env;
+   this.dom = u.c('div');
+   const view = u.c('div');
+   this.view = view;
+   u.a(this.dom, view);
+
+   const btn = u.c('div');
+   u.ca(btn, 'hintbtn');
+   u.a(btn, u.t('^'));
+   u.a(this.dom, btn);
+
+   const that = this;
+   btn.addEventListener('click', function () {
+      btn.innerHTML = '';
+      if (env.show) {
+         u.a(btn, u.t('^'));
+         view.innerHTML = '';
+         env.show = false;
+      } else {
+         u.a(btn, u.t('v'));
+         env.show = true;
+         that.update();
+      }
+   });
 }
-GHint.prototype = {};
+GHint.prototype = {
+   update: function () {
+      const env = this.env;
+      env.pa = Object.assign({}, pa);
+      env.p5m = {}; Object.keys(p5m).forEach(function (z) { env.p5m[z] = 0; });
+
+      const stat = this.game.stat.ph;
+      const one0 = this.game.ph;
+      this.view.innerHTML = '';
+      this.game.history.forEach(function (one) {
+         one.forEach(function (z, i) {
+            if (one0[i].pra === z.pra) {
+               env.pa[z.pra] = 2;
+            } else if (z.pra in stat.a) {
+               if (env.pa[z.pra] <= 0) env.pa[z.pra] = 1;
+            } else {
+               if (env.pa[z.pra] === 0) env.pa[z.pra] = -1;
+            }
+            if (one0[i].prb === z.prb) {
+               env.p5m[z.prb] = 2;
+            } else if (z.prb in stat.b) {
+               if (env.p5m[z.prb] <= 0) env.p5m[z.prb] = 1;
+            } else {
+               if (env.p5m[z.prb] === 0) env.p5m[z.prb] = -1;
+            }
+         });
+      });
+
+      var div;
+      div = u.c('div'); u.a(div, u.t('辅音')); u.a(this.view, div);
+      div = u.c('div');
+      Object.keys(env.pa).forEach(function (k) {
+         const span = u.c('span');
+         u.ca(span, 'hinta');
+         u.ca(span, buColor(env.pa[k]));
+         u.a(span, u.t(k)); u.a(div, span);
+      });
+      u.a(this.view, div);
+      div = u.c('div'); u.a(div, u.t('元音')); u.a(this.view, div);
+      div = u.c('div');
+      Object.keys(env.p5m).forEach(function (k) {
+         const span = u.c('span');
+         u.ca(span, 'hinta');
+         u.ca(span, buColor(env.p5m[k]));
+         u.a(span, u.t(k)); u.a(div, span);
+      });
+      u.a(this.view, div);
+
+      function buColor(n) {
+         switch(n) {
+         case -1: return 'gray';
+         case 1: return 'orange';
+         case 2: return 'blue';
+         default: return 'black';
+         }
+      }
+   }
+};
 
 function init() {
    const layout = new GLayout();
@@ -398,7 +485,9 @@ function init() {
    u.a(layout.dom, phdiv);
 
    const statdiv = u.c('div');
-   const input = new GInput(game, {
+   const hint = new GHint(game);
+   u.a(statdiv, hint.dom);
+   const input = new GInput(game, hint, {
       onSubmit: function (ph, p5idx) {
          phdiv.innerHTML = '';
          const guess = oneShot(ph, p5idx);

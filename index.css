@@ -40,10 +40,10 @@ body {
 .character .pinyin > div.bottom { z-index: -1; }
 .character .pinyin > .p5 { height: 8px; margin-top: -1px; font-weight: bold; }
 .character .pinyin > .full { color: orange; }
-.character .pinyin > .half { color: blue }
+.character .pinyin > .half { color: #0073ff; }
 .character .hanzi { font-size: 36px; }
 .character .hanzi.full { color: orange; }
-.character .hanzi.half { color: blue }
+.character .hanzi.half { color: #0073ff; }
 
 .phview {
    flex: 1 0 auto;
@@ -79,3 +79,17 @@ body {
    font-size: 36px;
    user-select: none;
 }
+
+.hintbtn {
+   text-align: center;
+   width: 100%;
+   user-select: none;
+   cursor: pointer;
+}
+.hinta {
+   margin: 0 3px;
+   display: inline-block;
+}
+.hinta.gray { color: #ddd; }
+.hinta.orange { color: orange; font-weight: bold; }
+.hinta.blue { color: #0073ff; font-weight: bold; }
