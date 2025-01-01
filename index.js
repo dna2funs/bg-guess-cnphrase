@@ -39,7 +39,7 @@ const p5m = {
    iong: 1,
    ie: 1,
    iu: 1,
-   un: 1,
+   un: 0,
    ua: 1,
    uan: 1,
    uang: 1,
