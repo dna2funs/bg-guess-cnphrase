@@ -238,14 +238,20 @@ Game.prototype = {
       guess.forEach(function (z, i) {
           const z0 = ph[i];
           z.f = 0;
-          if (z0.ch === z.ch) { z.f += 2000; g0stat.zi[z.ch].splice(g0stat.zi[z.ch].indexOf(i)); }
-          if (z0.pra === z.pra) { z.f += 200; g0stat.a[z.pra].splice(g0stat.a[z.pra].indexOf(i)); }
-          if (z0.prb === z.prb) { z.f += 20; g0stat.b[z.prb].splice(g0stat.b[z.prb].indexOf(i)); }
-          if (z0.p5 === z.p5) { z.f += 2; g0stat.p5[z.p5].splice(g0stat.p5[z.p5].indexOf(i)); }
+          /* exact code:
+          if (z0.ch === z.ch) { z.f += 2000; g0stat.zi[z.ch].splice(g0stat.zi[z.ch].indexOf(i), 1); }
+          if (z0.pra === z.pra) { z.f += 200; g0stat.a[z.pra].splice(g0stat.a[z.pra].indexOf(i), 1); }
+          if (z0.prb === z.prb) { z.f += 20; g0stat.b[z.prb].splice(g0stat.b[z.prb].indexOf(i), 1); }
+          if (z0.p5 === z.p5) { z.f += 2; g0stat.p5[z.p5].splice(g0stat.p5[z.p5].indexOf(i), 1); }
+          */
+          // enough for a little better performance
+          if (z0.ch === z.ch) { z.f += 2000; g0stat.zi[z.ch].pop(); }
+          if (z0.pra === z.pra) { z.f += 200; g0stat.a[z.pra].pop(); }
+          if (z0.prb === z.prb) { z.f += 20; g0stat.b[z.prb].pop(); }
+          if (z0.p5 === z.p5) { z.f += 2; g0stat.p5[z.p5].pop(); }
       });
       guess.forEach(function (z, i) {
           const z0 = ph[i];
-          var f1 = 0, f2 = 0, f3 = 0, f4 = 0;
           if (z0.ch !== z.ch && g0stat.zi[z.ch]?.length) { z.f += 1000; g0stat.zi[z.ch].pop(); }
           if (z0.pra !== z.pra && g0stat.a[z.pra]?.length) { z.f += 100; g0stat.a[z.pra].pop(); }
           if (z0.prb !== z.prb && g0stat.b[z.prb]?.length) { z.f += 10; g0stat.b[z.prb].pop(); }
